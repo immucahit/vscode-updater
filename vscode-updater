@@ -1,0 +1,37 @@
+#!/bin/bash
+
+if [ $# -gt 0 ]; then
+    VSCODE_URL="$1"
+    if [ -d $2 ]; then
+        VSCODE_FOLDER="$2"
+        IS_VSCODE_DOWNLOADED=0
+        echo "Visual Studio Code downloading..."
+        wget -O "vscode.tar.gz" $VSCODE_URL && IS_VSCODE_DOWNLOADED=1
+        if [ $IS_VSCODE_DOWNLOADED -eq 1 ]; then
+            echo "Visual Studio Code downloaded."
+            echo "Visual Studio Code exporting..."
+            IS_VSCODE_EXPORTED=0
+            tar -xzvf "vscode.tar.gz" && IS_VSCODE_EXPORTED=1
+            if [ $IS_VSCODE_EXPORTED -eq 1 ]; then
+                echo "Visual Studio Code exported."
+                echo "Visual Studio Code copying to folder..."
+                IS_VSCODE_COPIED=0
+                cp -Rfuv "VSCode-linux-x64/" $VSCODE_FOLDER && IS_VSCODE_COPIED=1
+                if [ $IS_VSCODE_COPIED -eq 1 ]; then
+                    echo "Visual Studio Code copied to folder."
+                    rm -Rfv "vscode.tar.gz" "VSCode-linux-x64/"
+                else
+                    echo "Visual Studio Code not copied."
+                fi
+            else
+                echo "Visual Studio Code not exporeted!"
+            fi
+        else
+            echo "Visual Studio Code not downloaded."
+        fi
+    else
+        echo "Visual Studio Code \"$2\" folder missing!"
+    fi
+else
+    echo "Visual Studio Code url is empty!"
+fi
